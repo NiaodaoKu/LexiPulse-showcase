@@ -1,160 +1,179 @@
-# MOMO Shopping Website — 5-Minute Speech Script
-> Level: Junior High School English | ~680 words | ~5 minutes
+<div align="center">
+
+<img src="icon.png" width="120" alt="LexiPulse Icon" />
+
+# ⚡ LexiPulse
+
+**科學化間隔重複單字記憶系統**
+
+[![Live Demo](https://img.shields.io/badge/🔗_Live_Demo-lexipulse.pages.dev-6366f1?style=for-the-badge)](https://lexipulse.pages.dev)
+[![Cloudflare Pages](https://img.shields.io/badge/Hosted_on-Cloudflare_Pages-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://pages.cloudflare.com)
+[![Google Apps Script](https://img.shields.io/badge/Backend-Google_Apps_Script-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://script.google.com)
+[![PWA](https://img.shields.io/badge/PWA-Installable-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)](https://lexipulse.pages.dev)
+
+*打造你的專屬單字庫 — 讓艾賓浩斯遺忘曲線替你決定何時該複習*
+
+</div>
 
 ---
 
-## 🟠 Opening (about 30 seconds)
+## ✨ 功能亮點
 
-In this presentation, I will talk about three things:
-first, a **quick look at the modules**,
-then **how the features depend on each other**,
-and finally, **the step-by-step shopping flow**.
-
----
-
-## 🟡 Part 1 — Modules (about 30 seconds)
-
-MOMO has **9 main modules**.
-
-These include things like the **Member System**, **Product Search**, **Shopping Cart**, **Checkout**, **Order Management**, **Reviews**, **Wishlist**, **Promotions**, and **Customer Service**.
-
-Each module is a group of features.
-For example, the Member System includes login, register, and profile management.
-
-I won't go into detail for each one today.
-Instead, let's focus on the more interesting part — **how they are connected**.
+| 功能 | 說明 |
+|------|------|
+| 🧠 **SRS 間隔重複** | 自研 SRS 演算法，依據遺忘曲線動態排程複習時機 |
+| 📸 **AI 輔助錄入** | 拍照辨識單字 / AI 生成例句與提示 |
+| 📚 **單字 & 句子庫** | 分開管理單字組與句子，支援語境提示（context）欄位 |
+| ⭐ **收藏 & 分類** | 星號收藏、自訂卡組標籤，快速篩選 |
+| 📊 **月度回顧** | 每月統計新增單字數與複習次數 |
+| 📵 **完整離線支援** | Service Worker 快取，離線操作自動排隊，上線後同步 |
+| 📱 **可安裝 PWA** | iOS / Android 均可加到主畫面，體驗近似原生 App |
 
 ---
 
-## 🔵 Part 2 — Dependencies (about 2 minutes)
+## 🏗️ 系統架構
 
-So, what is a **dependency**?
-
-A dependency means: **"This feature needs another feature to work first."**
-
-Let me give you a simple example from real life.
-Before you can eat lunch, you need to have food.
-Before you have food, you need to go to the store.
-So eating depends on shopping, and shopping depends on going out.
-
-MOMO works the same way.
-
----
-
-The most important module on MOMO is the **Member System** — which means **logging in**.
-
-Almost every feature on MOMO depends on it.
-
-For example:
-- You need to **log in** before you can check out and pay.
-- You need to **log in** before you can save a product to your wishlist.
-- You need to **log in** before you can write a review.
-
-So login is like a **key**. Without the key, you cannot open most doors on the website.
-
----
-
-But there is **one exception**.
-
-You do **not** need to log in to **search and browse products**.
-
-Anyone can look around on MOMO — even people without an account.
-This is smart design, because it lets new visitors explore the website before they decide to sign up.
-
----
-
-Next, let's look at the **Shopping Cart and Checkout**.
-
-These two are closely connected.
-
-You cannot go to the checkout page if your cart is empty.
-And you cannot add something to your cart if you haven't found a product first.
-
-So the dependency is:
-**Search a product → Add it to the cart → Go to checkout.**
-
-Each step needs the step before it.
+```
+┌─────────────────────────────────────────────────┐
+│                   使用者瀏覽器                     │
+│                                                  │
+│  index.html (Vanilla JS + Tailwind CSS)          │
+│  ├─ Google Identity Services (GIS 登入)           │
+│  ├─ Service Worker (sw.js) → 離線佇列             │
+│  └─ PWA Manifest                                 │
+└────────────────────┬────────────────────────────┘
+                     │ HTTPS POST
+                     ▼
+┌─────────────────────────────────────────────────┐
+│         Cloudflare Pages Functions               │
+│              functions/api.js                    │
+│                                                  │
+│  ⚙️  GAS 302 Redirect Proxy                      │
+│  → POST 觸發 GAS 執行                             │
+│  → GET redirect URL 取回結果                      │
+│  → 繞過瀏覽器 CORS 限制                            │
+└────────────────────┬────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────┐
+│          Google Apps Script (後端)               │
+│               程式碼.js                           │
+│                                                  │
+│  doPost() → action router → 30+ API functions   │
+│  ├─ 用戶管理 (getUserInfo, markWelcomed...)       │
+│  ├─ 單字 CRUD (addWords, editWord, delete...)    │
+│  ├─ SRS 引擎 (dailyReset, completeOneRound...)   │
+│  ├─ 錯題庫 (saveWrongAnswer, recordCorrect...)   │
+│  └─ 分類系統 (getUserCategories, updateSet...)   │
+└────────────────────┬────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────┐
+│            Google Sheets (資料庫)                 │
+│                                                  │
+│  📋 用戶索引  → 所有用戶基本資料 & 星號 & 分類      │
+│  ❌ 錯題庫   → 跨用戶統一錯題追蹤                  │
+│  👤 {userKey} → 每位用戶一個 Sheet，儲存單字組     │
+└─────────────────────────────────────────────────┘
+```
 
 ---
 
-The last example I want to share is **Reviews**.
+## 🧬 SRS 演算法
 
-To write a review on MOMO, you need **two things**:
-one, you must be **logged in**,
-and two, you must have a **completed order** for that product.
+自研間隔重複排程，無需外部套件：
 
-You cannot review something you never bought.
-This makes the reviews more honest and trustworthy.
+```
+輪次 0（當天錄入）  → 複習 3 次
+輪次 1（隔 1 天）   → 複習 3 次
+輪次 2（隔 1 天）   → 複習 2 次
+輪次 3（隔 1 天）   → 複習 2 次
+輪次 4（隔 1 天）   → 複習 1 次
+輪次 5+            → 複習 1 次，間隔 max(2, round-3) 天
+```
 
-So reviews depend on **both** the Member System and the Order System at the same time.
-
----
-
-## 🟢 Part 3 — Shopping Flow (about 1 minute 45 seconds)
-
-Now let's look at the **full shopping flow**.
-
-This is the path a user takes from the very beginning to the very end.
-There are **6 steps**.
+錯題庫採**連續答對 3 次**自動畢業機制，強化薄弱點。
 
 ---
 
-**Step 1 — Log in or Register**
+## 🛠️ 技術棧
 
-The user opens MOMO and logs in.
-If they don't have an account, they register with a phone number or email.
-This is the starting point.
+| 層級 | 技術 | 說明 |
+|------|------|------|
+| **前端** | Vanilla JS + Tailwind CSS | 零框架，輕量快速 |
+| **PWA** | Service Worker + Web App Manifest | 離線支援 + 可安裝 |
+| **託管** | Cloudflare Pages | 全球 CDN，免費方案 |
+| **API Proxy** | Cloudflare Pages Functions | 解決 GAS CORS 問題 |
+| **後端** | Google Apps Script | Serverless，免費執行 |
+| **資料庫** | Google Sheets | 免費、有 UI、易維護 |
+| **身份驗證** | Google Identity Services (GIS) | OAuth 2.0，無密碼 |
 
----
-
-**Step 2 — Search and Browse**
-
-The user searches for a product using a keyword, or browses by category.
-They can also filter by price, brand, or rating to find what they want faster.
-
----
-
-**Step 3 — Add to Cart**
-
-The user finds a product they like.
-They choose the color, size, or other options, then add it to the shopping cart.
+> **架構亮點**：整套系統運行成本為 **$0**，完全基於免費服務，卻擁有完整的多用戶系統、REST-like API 設計、PWA 離線能力與自研 SRS 演算法。
 
 ---
 
-**Step 4 — Checkout and Pay**
+## 📁 專案結構
 
-The user goes to the checkout page.
-Here, they fill in the delivery address, choose a payment method — like credit card or LINE Pay — and enter a coupon code if they have one.
-Then they confirm the order and pay.
-
----
-
-**Step 5 — Track the Order**
-
-After paying, the user can go to the Order Management page.
-They can see if the order is being prepared, shipped, or already delivered.
-There is also a tracking link to follow the package in real time.
-
----
-
-**Step 6 — Write a Review**
-
-After the item arrives, the user can write a review.
-They give a star rating, write a comment, and upload photos if they want.
-This helps other shoppers make better decisions.
+```
+LexiPulse/
+├── 程式碼.js          # GAS 後端（所有 API，30+ functions）
+├── index.html         # 前端 SPA（UI + 前端邏輯）
+├── sw.js              # Service Worker（離線 + 背景同步）
+├── manifest.json      # PWA manifest
+├── appsscript.json    # GAS 設定（權限、時區）
+├── .clasp.json        # clasp CLI 設定
+├── functions/
+│   └── api.js         # Cloudflare Pages Function（GAS Proxy）
+└── *.ps1              # PowerShell patch 腳本（功能熱修復）
+```
 
 ---
 
-## 🔴 Closing (about 15 seconds)
+## 🚀 部署流程
 
-So, that is the big picture of MOMO.
+### 後端（Google Apps Script）
 
-Nine modules, many dependencies, and one clear flow from login to review.
+```bash
+npm install -g @google/clasp
+clasp login
+clasp push
+# → GAS 編輯器：部署 → 管理版本 → 選「新版本」→ 部署
+```
 
-Even a simple shopping website has a lot of **structure and logic** behind it.
+### 前端（Cloudflare Pages）
 
-Thank you for listening!
+Push 到 GitHub 後，Cloudflare Pages 自動觸發部署。
+
+```bash
+git add .
+git commit -m "feat: ..."
+git push origin main
+# → Cloudflare Pages 自動建置完成
+```
 
 ---
-> 💡 Tip: Speak at a relaxed pace — about 130 words per minute.  
-> Each section has a pause point. Take a breath between steps.
+
+## ⚙️ 本地開發設定
+
+```bash
+# 1. 安裝依賴
+npm install
+
+# 2. 登入 clasp
+clasp login
+
+# 3. 修改後端後推送
+clasp push
+
+# 4. 修改前端後直接 git push（Cloudflare 自動部署）
+```
+
+---
+
+<div align="center">
+
+**Built with ⚡ by [NiaodaoKu](https://github.com/NiaodaoKu)**
+
+*$0 infra · Serverless · PWA · Multi-user · SRS*
+
+</div>
