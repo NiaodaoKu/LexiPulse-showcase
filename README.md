@@ -2,6 +2,10 @@
 
 A full-stack spaced-repetition vocabulary app focused on practical learning flow, offline reliability, and low-cost deployment.
 
+![LexiPulse Demo](assets/demo.gif)
+
+Demo (30-45s): Daily task flow, offline queue behavior, and dashboard return speed.
+
 - Live Demo: https://lexipulse.pages.dev
 - Public Showcase: this repository
 - Private Source (full production repo): available on request for interview review

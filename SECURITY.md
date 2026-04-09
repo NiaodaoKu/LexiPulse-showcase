@@ -12,7 +12,7 @@ Please do not open public issues for suspected vulnerabilities.
 Report privately via:
 
 - GitHub security advisory (preferred)
-- Email: your-email@example.com
+- Email: pinopingpong@gmail.com
 
 Include:
 
