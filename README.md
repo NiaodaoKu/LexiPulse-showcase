@@ -10,6 +10,7 @@ A full-stack spaced-repetition vocabulary app focused on practical learning flow
 
 Most vocabulary apps solve practice; fewer solve continuity.
 LexiPulse is designed so users can keep learning with unstable network and still maintain progression integrity.
+The core idea started from a "decreasing learning" approach to vocabulary memorization, but I could not find mainstream apps implementing this algorithm in a practical daily workflow.
 
 ## What I Built
 
@@ -73,12 +74,3 @@ Wrong-answer retirement: 3 consecutive correct answers.
 - [CONTRIBUTING.md](CONTRIBUTING.md): contribution process
 - [SECURITY.md](SECURITY.md): vulnerability reporting
 - [LICENSE](LICENSE): MIT license
-
-## Interview Notes
-
-If you are evaluating this as a portfolio project, I can walk through:
-
-1. Why Apps Script + Cloudflare was chosen over a traditional Node backend.
-2. How offline queue consistency is maintained without heavy infra.
-3. Trade-offs of using Google Sheets as a datastore.
-4. How I would evolve this to a larger-scale architecture.
