@@ -90,3 +90,28 @@ If scaling beyond Apps Script limits:
 2. Replace Apps Script with dedicated backend API
 3. Move Google Sheets data to managed database
 4. Retain queue semantics for offline-first behavior
+
+## 9. Recent Architecture and Product Iterations
+
+### 9.1 Starred Vocabulary Data Flow
+
+- Frontend keeps fast-access starred state for immediate UI response.
+- Backend persists starred mapping in index metadata for cross-device consistency.
+- Study and quiz modules can consume starred subsets without changing core SRS contracts.
+
+### 9.2 Quiz Source Draft Protection
+
+- During source page background refresh, transient draft state is explicitly preserved.
+- This prevents unsubmitted source selections from being overwritten by async re-render cycles.
+
+### 9.3 Dictionary Pipeline Refinements
+
+- Lookup cache keys include query mode dimension to prevent cross-mode cache pollution.
+- `zh-en` candidate generation applies cleanup/ranking before rendering.
+- Meaning presentation focuses on in-context interpretation to reduce noisy explanations.
+
+### 9.4 Completion Path Under Weak Network
+
+- Daily completion returns to dashboard via local optimistic finalization.
+- Remote round finalization runs in background sync instead of blocking completion UX.
+- This keeps interaction latency stable in transit-grade network conditions.

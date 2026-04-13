@@ -88,6 +88,25 @@ Wrong-answer retirement: 3 consecutive correct answers.
 - Category and filtering support
 - Monthly recap metrics
 
+## Recent Feature Updates
+
+- Starred vocabulary system:
+  - Added cross-device starred persistence (frontend local state + backend index synchronization)
+  - Added starred study flow and starred quiz entry
+- Quiz flow resilience:
+  - Preserved quiz source draft state during async background refresh to prevent accidental source reset
+  - Improved source-to-mode transition stability for longer sessions
+- Dictionary experience upgrades:
+  - Added bilingual lookup refinement for `en-zh` and `zh-en` scenarios
+  - Added candidate translation cleanup/ranking and context-focused meaning presentation
+  - Improved IPA normalization and pronunciation interaction behavior
+- Input and authoring workflow:
+  - Updated bulk paste and AI-scan import behavior to append mode for faster batch entry
+  - Strengthened duplicate detection logic across punctuation/case variants
+- Completion experience on weak networks:
+  - Daily completion no longer blocks on remote round-finalization response
+  - Local completion returns quickly while remote sync continues in background
+
 ## Repository Guide
 
 - [docs/architecture.md](docs/architecture.md): system architecture and data flow
